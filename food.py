@@ -1,3 +1,4 @@
+
 from turtle import Turtle
 from random import randint
 
@@ -15,7 +16,7 @@ class Food(Turtle):
         self.color("red")
         self.penup()
 
-        self.SEGMENT_SIZE = segment_size
+        self.segment_size = segment_size
         self.lower_bounds = lower_bounds
         self.upper_bounds = upper_bounds
         self.move()
@@ -24,7 +25,7 @@ class Food(Turtle):
         x = randint(self.lower_bounds, self.upper_bounds)
         y = randint(self.lower_bounds, self.upper_bounds)
         # round to make sure it lines up with snake
-        x = round_to(base=self.SEGMENT_SIZE, number=x)
-        y = round_to(base=self.SEGMENT_SIZE, number=y)
+        x = round_to(base=self.segment_size, number=x)
+        y = round_to(base=self.segment_size, number=y)
 
         self.goto(x, y)

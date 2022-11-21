@@ -1,5 +1,7 @@
 from turtle import Turtle
 
+INITIAL_LENGTH = 3
+
 
 class Snake:
 
@@ -15,14 +17,12 @@ class Snake:
         new_segment.color("white")
         new_segment.penup()
         self.snake.append(new_segment)
-        for _ in range(2):
+        for _ in range(1, INITIAL_LENGTH):
             self.add_segment()
 
     def add_segment(self):
-        new_segment = self.snake[len(self.snake) - 1].clone()
-        new_segment.backward(self.segment_size)
+        new_segment = self.snake[-1].clone()
         self.snake.append(new_segment)
-
 
     def change_direction(self, angle):
         if abs(angle - self.head.heading()) != 180:
@@ -36,6 +36,3 @@ class Snake:
             self.snake[i].goto(leader_position)
             leader_position = current_position
             self.snake[i].setheading(self.snake[i - 1].heading())
-
-    def get_position(self):
-        return self.head.position()

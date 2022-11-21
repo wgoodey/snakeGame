@@ -1,13 +1,15 @@
+from tkinter import messagebox
 from turtle import Screen
 from snake import Snake
 from food import Food
+from scoreboard import Scoreboard
 import time
 
 SCREEN_SIZE = 600
-LOWER_BOUNDS = int(-(SCREEN_SIZE / 2) + 10)
-UPPER_BOUNDS = int((SCREEN_SIZE / 2) - 10)
 SEGMENT_SIZE = 20
 FOOD_SIZE = SEGMENT_SIZE / 2
+LOWER_BOUNDS = int(-(SCREEN_SIZE / 2) + FOOD_SIZE)
+UPPER_BOUNDS = int((SCREEN_SIZE / 2) - FOOD_SIZE)
 
 screen = Screen()
 screen.setup(SCREEN_SIZE, SCREEN_SIZE)
@@ -18,6 +20,7 @@ screen.listen()
 
 food = Food(SEGMENT_SIZE, LOWER_BOUNDS, UPPER_BOUNDS)
 snake = Snake(SEGMENT_SIZE)
+scoreboard = Scoreboard(UPPER_BOUNDS, FOOD_SIZE)
 
 
 def up():
@@ -38,28 +41,43 @@ def right():
 
 def check_if_food_eaten():
     if snake.head.distance(food.position()) < FOOD_SIZE:
-        print("ate food")
-        food.move()
+        invalid_food_positions = [food.position()]
+        while food.position() in invalid_food_positions:
+            food.move()
+            for segment in snake.snake:
+                if food.distance(segment) < FOOD_SIZE:
+                    invalid_food_positions.append(food.position())
+
         snake.add_segment()
+        scoreboard.increase_score()
+
 
 def game_over():
-    x, y = snake.get_position()
+    x, y = snake.head.position()
     if x <= LOWER_BOUNDS or y <= LOWER_BOUNDS or x >= UPPER_BOUNDS or y >= UPPER_BOUNDS:
         return True
+
     # check if head is in same position as any snake segment
+    for segment in snake.snake[4:]:
+        if snake.head.distance(segment) < FOOD_SIZE:
+            return True
 
     return False
 
 
 def set_listeners(scr):
     scr.onkeypress(key="e", fun=up)
+    scr.onkeypress(key="Up", fun=up)
     scr.onkeypress(key="d", fun=down)
+    scr.onkeypress(key="Down", fun=down)
     scr.onkeypress(key="s", fun=left)
+    scr.onkeypress(key="Left", fun=left)
     scr.onkeypress(key="f", fun=right)
+    scr.onkeypress(key="Right", fun=right)
 
     # TODO: remove these listeners
-    scr.onkeypress(key="space", fun=move)
-    # scr.onkeypress(key="\t", fun=add_segment)
+    # scr.onkeypress(key="space", fun=move)
+    # scr.onkeypress(key="\t", fun=snake.add_segment)
 
 
 def move():
@@ -71,10 +89,12 @@ def move():
 
 
 set_listeners(screen)
+messagebox.showinfo("Ready to play?", "Press OK to begin.")
 
 while True:
     move()
     if game_over():
+        scoreboard.game_over()
         break
 
 screen.exitonclick()
