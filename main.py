@@ -66,18 +66,10 @@ def game_over():
 
 
 def set_listeners(scr):
-    scr.onkeypress(key="e", fun=up)
     scr.onkeypress(key="Up", fun=up)
-    scr.onkeypress(key="d", fun=down)
     scr.onkeypress(key="Down", fun=down)
-    scr.onkeypress(key="s", fun=left)
     scr.onkeypress(key="Left", fun=left)
-    scr.onkeypress(key="f", fun=right)
     scr.onkeypress(key="Right", fun=right)
-
-    # TODO: remove these listeners
-    # scr.onkeypress(key="space", fun=move)
-    # scr.onkeypress(key="\t", fun=snake.add_segment)
 
 
 def move():
