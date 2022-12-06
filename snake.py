@@ -7,6 +7,7 @@ class Snake:
 
     def __init__(self, segment_size, heading=0):
         self.segment_size = segment_size
+        self.initial_heading = heading
         self.snake = []
         self.create_snake()
         self.head = self.snake[0]
@@ -36,3 +37,9 @@ class Snake:
             self.snake[i].goto(leader_position)
             leader_position = current_position
             self.snake[i].setheading(self.snake[i - 1].heading())
+
+    def reset(self):
+        for segment in self.snake:
+            segment.hideturtle()
+
+        self.__init__(self.segment_size, self.initial_heading)

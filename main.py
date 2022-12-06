@@ -1,5 +1,5 @@
 from tkinter import messagebox
-from turtle import Screen
+from turtle import Screen, Turtle
 from snake import Snake
 from food import Food
 from scoreboard import Scoreboard
@@ -52,7 +52,7 @@ def check_if_food_eaten():
         scoreboard.increase_score()
 
 
-def game_over():
+def is_game_over():
     x, y = snake.head.position()
     if x <= LOWER_BOUNDS or y <= LOWER_BOUNDS or x >= UPPER_BOUNDS or y >= UPPER_BOUNDS:
         return True
@@ -70,6 +70,7 @@ def set_listeners(scr):
     scr.onkeypress(key="Down", fun=down)
     scr.onkeypress(key="Left", fun=left)
     scr.onkeypress(key="Right", fun=right)
+    scr.onkeypress(key="Return", fun=restart)
 
 
 def move():
@@ -80,13 +81,24 @@ def move():
     screen.update()
 
 
+def play():
+    while True:
+        move()
+        if is_game_over():
+            scoreboard.game_over()
+            return False
+
+
+def restart():
+    scoreboard.reset_scoreboard()
+    snake.reset()
+
+
 set_listeners(screen)
-messagebox.showinfo("Ready to play?", "Press OK to begin.")
 
 while True:
-    move()
-    if game_over():
-        scoreboard.game_over()
-        break
+    restart()
+    game_over = is_game_over()
+    while not game_over:
+        game_over = play()
 
-screen.exitonclick()
