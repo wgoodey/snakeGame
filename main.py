@@ -1,5 +1,4 @@
-from tkinter import messagebox
-from turtle import Screen, Turtle
+from turtle import Screen
 from snake import Snake
 from food import Food
 from scoreboard import Scoreboard
@@ -80,25 +79,22 @@ def move():
     time.sleep(.1)
     screen.update()
 
-
-def play():
-    while True:
-        move()
-        if is_game_over():
-            scoreboard.game_over()
-            return False
-
-
+play_again = True
 def restart():
-    scoreboard.reset_scoreboard()
-    snake.reset()
+    global play_again
+    play_again = True
 
 
 set_listeners(screen)
-
 while True:
-    restart()
+    if play_again:
+        scoreboard.reset_scoreboard()
+        snake.reset()
+    play_again = False
+
     game_over = is_game_over()
     while not game_over:
-        game_over = play()
+        move()
+        game_over = is_game_over()
 
+    scoreboard.game_over()
